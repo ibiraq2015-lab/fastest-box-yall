@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>فاست بوكس | Fast Box</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Tahoma,sans-serif;
+}
+
+body{
+  background:#0f0f0f;
+  color:white;
+}
+
+header{
+  background:#111;
+  padding:20px 50px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:2px solid #e50914;
+}
+
+.logo{
+  font-size:30px;
+  color:#e50914;
+  font-weight:bold;
+}
+
+nav a{
+  color:white;
+  text-decoration:none;
+  margin:0 12px;
+}
+
+.hero{
+  height:85vh;
+  background:url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200') center/cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+.hero-content{
+  background:rgba(0,0,0,0.7);
+  padding:40px;
+  border-radius:15px;
+}
+
+.hero h1{
+  font-size:60px;
+  margin-bottom:20px;
+}
+
+.hero p{
+  font-size:22px;
+  margin-bottom:25px;
+}
+
+.btn{
+  background:#e50914;
+  padding:15px 35px;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.movies{
+  padding:60px 40px;
+}
+
+.section-title{
+  color:#e50914;
+  font-size:35px;
+  margin-bottom:30px;
+}
+
+.movie-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:25px;
+}
+
+.movie-card{
+  background:#1b1b1b;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.movie-card img{
+  width:100%;
+  height:320px;
+  object-fit:cover;
+}
+
+.movie-info{
+  padding:15px;
+}
+
+.admin-box{
+  width:90%;
+  max-width:400px;
+  margin:50px auto;
+  background:#1b1b1b;
+  padding:30px;
+  border-radius:15px;
+  display:none;
+}
+
+.admin-box input{
+  width:100%;
+  padding:15px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+  background:#2a2a2a;
+  color:white;
+}
+
+.admin-panel{
+  display:none;
+  width:90%;
+  max-width:500px;
+  margin:40px auto;
+  background:#1b1b1b;
+  padding:30px;
+  border-radius:15px;
+  text-align:center;
+}
+
+footer{
+  text-align:center;
+  padding:25px;
+  background:#111;
+  border-top:2px solid #e50914;
+  margin-top:50px;
+}
+
+.error{
+  color:red;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">FAST BOX</div>
+
+<nav>
+  <a href="#">الرئيسية</a>
+  <a href="#">الأفلام</a>
+  <a href="#">المسلسلات</a>
+  <a href="#">الأكثر مشاهدة</a>
+  <a href="#" onclick="showAdmin()">Admin</a>
+</nav>
+</header>
+
+<section class="hero">
+<div class="hero-content">
+  <h1>مرحباً بك في فاست بوكس</h1>
+  <p>أفضل موقع لمشاهدة أحدث الأفلام والمسلسلات</p>
+  <button class="btn">ابدأ المشاهدة</button>
+</div>
+</section>
+
+<section class="movies">
+<h2 class="section-title">أحدث الأفلام</h2>
+
+<div class="movie-grid">
+
+<div class="movie-card">
+<img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=800">
+<div class="movie-info">
+<h3>Movie One</h3>
+<p>فيلم أكشن وإثارة.</p>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=800">
+<div class="movie-info">
+<h3>Movie Two</h3>
+<p>فيلم مغامرات جديد.</p>
+</div>
+</div>
+
+</div>
+</section>
+
+<div class="admin-box" id="adminBox">
+<h2>تسجيل دخول الادمن</h2>
+
+<input type="text" id="username" placeholder="اسم المستخدم">
+<input type="password" id="password" placeholder="كلمة المرور">
+
+<button class="btn" onclick="login()">دخول</button>
+
+<p id="message"></p>
+</div>
+
+<div class="admin-panel" id="adminPanel">
+<h2>تم تسجيل الدخول بنجاح</h2>
+<p>مرحباً بك داخل لوحة التحكم الخاصة بموقع فاست بوكس</p>
+<br>
+<button class="btn" onclick="logout()">تسجيل خروج</button>
+</div>
+
+<footer>
+جميع الحقوق محفوظة © فاست بوكس 2026
+</footer>
+
+<script>
+function showAdmin(){
+  document.getElementById("adminBox").style.display = "block";
+}
+
+function login(){
+  let user = document.getElementById("username").value;
+  let pass = document.getElementById("password").value;
+
+  if(user === "iraq2003" && pass === "ibrahim"){
+    document.getElementById("adminPanel").style.display = "block";
+    document.getElementById("adminBox").style.display = "none";
+  }else{
+    document.getElementById("message").innerHTML =
+    "اسم المستخدم أو كلمة المرور غير صحيحة";
+  }
+}
+
+function logout(){
+  document.getElementById("adminPanel").style.display = "none";
+}
+</script>
+
+</body>
+</html>
