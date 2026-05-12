@@ -3,5 +3,4 @@
 موقع أفلام بسيط جاهز للرفع على GitHub Pages.
 
 ## بيانات الأدمن
-- Username: iraq2003
-- Password: ibrahim
+
