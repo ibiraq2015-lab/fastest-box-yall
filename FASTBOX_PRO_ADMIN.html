@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAST BOX PRO ADMIN</title>
+<style>
+:root{
+--bg:#050816;
+--card:#0f172a;
+--card2:#111c34;
+--line:rgba(108,242,255,.12);
+--cyan:#6cf2ff;
+--purple:#8b5cf6;
+--text:#fff;
+--muted:#94a3b8;
+--green:#00ff9d;
+--red:#ff5470;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:Cairo,sans-serif;
+background:linear-gradient(180deg,#050816,#081224);
+color:var(--text);
+display:flex;
+min-height:100vh;
+overflow:hidden;
+}
+.sidebar{
+width:260px;
+background:rgba(10,15,30,.95);
+border-left:1px solid var(--line);
+padding:24px 18px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+.logo{
+font-size:26px;
+font-weight:900;
+background:linear-gradient(90deg,var(--cyan),var(--purple));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.menu{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:20px;
+}
+.menu button{
+background:rgba(255,255,255,.04);
+border:1px solid transparent;
+color:#fff;
+padding:14px;
+border-radius:14px;
+cursor:pointer;
+font-size:15px;
+text-align:right;
+transition:.25s;
+}
+.menu button:hover,.menu button.active{
+border-color:rgba(108,242,255,.25);
+background:rgba(108,242,255,.08);
+transform:translateX(-4px);
+}
+.main{
+flex:1;
+overflow:auto;
+padding:28px;
+}
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:26px;
+}
+.search{
+background:rgba(255,255,255,.05);
+border:1px solid var(--line);
+padding:14px 18px;
+border-radius:14px;
+width:320px;
+color:#fff;
+outline:none;
+}
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin-bottom:28px;
+}
+.card{
+background:linear-gradient(180deg,#0c1529,#101b35);
+border:1px solid var(--line);
+border-radius:22px;
+padding:22px;
+box-shadow:0 0 35px rgba(0,0,0,.25);
+}
+.stat-number{
+font-size:38px;
+font-weight:900;
+margin-bottom:8px;
+}
+.stat-label{
+color:var(--muted);
+font-size:13px;
+}
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+.table{
+width:100%;
+border-collapse:collapse;
+margin-top:18px;
+}
+.table th,.table td{
+padding:14px;
+border-bottom:1px solid rgba(255,255,255,.06);
+text-align:right;
+}
+.table th{
+color:var(--muted);
+font-size:13px;
+}
+.badge{
+padding:5px 10px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+display:inline-block;
+}
+.badge.movie{background:rgba(108,242,255,.12);color:var(--cyan)}
+.badge.series{background:rgba(139,92,246,.14);color:#c4b5fd}
+.actions{
+display:flex;
+gap:8px;
+}
+.actions button{
+border:none;
+padding:8px 12px;
+border-radius:10px;
+cursor:pointer;
+color:#fff;
+}
+.edit{background:#2563eb}
+.delete{background:#dc2626}
+.panel-title{
+font-size:20px;
+font-weight:800;
+margin-bottom:10px;
+}
+.activity{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:16px;
+}
+.activity-item{
+padding:14px;
+border-radius:14px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.04);
+}
+.quick{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
+}
+.quick button{
+padding:14px;
+border-radius:14px;
+border:none;
+cursor:pointer;
+font-weight:700;
+background:linear-gradient(135deg,var(--cyan),var(--purple));
+color:#fff;
+}
+.progress{
+height:10px;
+border-radius:20px;
+background:rgba(255,255,255,.06);
+overflow:hidden;
+margin-top:10px;
+}
+.progress span{
+display:block;
+height:100%;
+width:72%;
+background:linear-gradient(90deg,var(--cyan),var(--purple));
+}
+@media(max-width:1100px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.grid{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+body{flex-direction:column}
+.sidebar{width:100%;flex-direction:row;overflow:auto}
+.menu{flex-direction:row;margin-top:0}
+.stats{grid-template-columns:1fr}
+.topbar{flex-direction:column;align-items:flex-start;gap:14px}
+.search{width:100%}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+<div class="logo">FAST BOX</div>
+
+<div class="menu">
+<button class="active">📊 Dashboard</button>
+<button>🎬 إدارة المحتوى</button>
+<button>👥 المستخدمين</button>
+<button>🔥 الرائج</button>
+<button>📈 الإحصائيات</button>
+<button>⚙ الإعدادات</button>
+</div>
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+<div>
+<h1 style="font-size:32px;font-weight:900">لوحة الإدارة الاحترافية</h1>
+<p style="color:var(--muted);margin-top:5px">إدارة كاملة لمنصة FAST BOX</p>
+</div>
+
+<input class="search" placeholder="ابحث عن فيلم أو مستخدم...">
+</div>
+
+<section class="stats">
+<div class="card">
+<div class="stat-number">1,284</div>
+<div class="stat-label">إجمالي الأفلام</div>
+</div>
+
+<div class="card">
+<div class="stat-number">384</div>
+<div class="stat-label">إجمالي المسلسلات</div>
+</div>
+
+<div class="card">
+<div class="stat-number">42K</div>
+<div class="stat-label">المشاهدات اليومية</div>
+</div>
+
+<div class="card">
+<div class="stat-number">8,219</div>
+<div class="stat-label">المستخدمون</div>
+</div>
+</section>
+
+<section class="grid">
+
+<div class="card">
+<div class="panel-title">🎬 آخر المحتويات</div>
+
+<table class="table">
+<thead>
+<tr>
+<th>العنوان</th>
+<th>النوع</th>
+<th>التقييم</th>
+<th>العمليات</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>John Wick 4</td>
+<td><span class="badge movie">فيلم</span></td>
+<td>8.9</td>
+<td>
+<div class="actions">
+<button class="edit">تعديل</button>
+<button class="delete">حذف</button>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Breaking Bad</td>
+<td><span class="badge series">مسلسل</span></td>
+<td>9.8</td>
+<td>
+<div class="actions">
+<button class="edit">تعديل</button>
+<button class="delete">حذف</button>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>Dune Part Two</td>
+<td><span class="badge movie">فيلم</span></td>
+<td>8.7</td>
+<td>
+<div class="actions">
+<button class="edit">تعديل</button>
+<button class="delete">حذف</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<div style="display:flex;flex-direction:column;gap:20px">
+
+<div class="card">
+<div class="panel-title">⚡ نشاط النظام</div>
+
+<div class="activity">
+<div class="activity-item">
+🎬 تمت إضافة فيلم جديد
+</div>
+
+<div class="activity-item">
+👤 مستخدم جديد قام بالتسجيل
+</div>
+
+<div class="activity-item">
+🔥 ارتفاع المشاهدات بنسبة 18%
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="panel-title">📡 حالة السيرفر</div>
+
+<div style="margin-top:14px;color:var(--muted)">
+سرعة النظام
+<div class="progress"><span></span></div>
+</div>
+
+<div style="margin-top:18px;color:var(--muted)">
+استهلاك التخزين
+<div class="progress"><span style="width:58%"></span></div>
+</div>
+
+<div class="quick">
+<button>➕ إضافة فيلم</button>
+<button>📺 إضافة مسلسل</button>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</body>
+</html>
