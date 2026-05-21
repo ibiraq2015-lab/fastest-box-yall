@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>📚 استيراد المكتبة العربية — فاست بوكس</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cyan:#6cf2ff; --purple:#8b5cf6; --green:#00ff9d;
+  --red:#e50914; --gold:#ffd700; --muted:#94a3c4;
+}
+body{
+  background:linear-gradient(135deg,#020617,#070b1b);
+  color:#fff; font-family:'Cairo',sans-serif;
+  min-height:100vh; padding:20px;
+}
+h1{
+  text-align:center;
+  font-size:clamp(22px,5vw,36px);
+  font-weight:900;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:30px;}
+
+.card{
+  background:rgba(10,18,40,.8);
+  border:1px solid rgba(108,242,255,.15);
+  border-radius:18px; padding:22px; margin-bottom:18px;
+  backdrop-filter:blur(12px);
+}
+.card h2{font-size:16px;font-weight:800;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
+.stat-box{
+  background:rgba(108,242,255,.07);border:1px solid rgba(108,242,255,.15);
+  border-radius:12px;padding:12px;text-align:center;
+}
+.stat-n{font-size:28px;font-weight:900;color:var(--cyan);}
+.stat-l{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* Progress */
+.prog-wrap{background:rgba(255,255,255,.06);border-radius:8px;height:14px;overflow:hidden;margin:10px 0;}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  border-radius:8px;
+  transition:width .4s ease;
+  width:0%;
+}
+.prog-label{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;}
+
+/* Log */
+.log-box{
+  background:#000; border:1px solid rgba(255,255,255,.08);
+  border-radius:10px; padding:12px; height:220px;
+  overflow-y:auto; font-size:12px; line-height:1.7;
+  font-family:monospace;
+}
+.log-box::-webkit-scrollbar{width:4px;}
+.log-box::-webkit-scrollbar-thumb{background:rgba(108,242,255,.3);border-radius:2px;}
+.log-ok  {color:#00ff9d;}
+.log-warn{color:#ffd700;}
+.log-err {color:#ff6b6b;}
+.log-info{color:var(--cyan);}
+
+/* Buttons */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.btn{
+  padding:11px 22px;border-radius:10px;border:none;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:.2s;display:flex;align-items:center;gap:7px;
+}
+.btn-start{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#000;}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(108,242,255,.4);}
+.btn-pause{background:rgba(255,200,0,.15);border:1px solid rgba(255,200,0,.4);color:#ffd700;}
+.btn-stop {background:rgba(229,9,20,.15); border:1px solid rgba(229,9,20,.4); color:#ff6b6b;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+/* Settings */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px;}
+.fg label{font-size:12px;color:var(--muted);margin-bottom:5px;display:block;}
+.fi{
+  width:100%;padding:9px 12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(108,242,255,.2);
+  border-radius:8px;color:#fff;
+  font-family:'Cairo',sans-serif;font-size:13px;outline:none;
+}
+.fi:focus{border-color:var(--cyan);}
+select.fi option{background:#1c1c1c;}
+
+/* Recent imports */
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:280px;overflow-y:auto;}
+.rec-item{background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden;font-size:11px;}
+.rec-item img{width:100%;height:130px;object-fit:cover;display:block;}
+.rec-item p{padding:5px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* Badge */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;
+}
+.badge-on {background:rgba(0,255,157,.15);border:1px solid rgba(0,255,157,.3);color:var(--green);}
+.badge-off{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#888;}
+
+/* Alert */
+.alert{
+  background:rgba(255,200,0,.08);border:1px solid rgba(255,200,0,.25);
+  border-radius:10px;padding:12px 16px;font-size:13px;color:#ffd700;
+  margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;
+}
+</style>
+</head>
+<body>
+
+<h1>📚 استيراد المكتبة العربية الكاملة</h1>
+<p class="sub">يجلب آلاف الأفلام العربية من TMDB ويضيفها تلقائياً إلى قاعدة بيانات فاست بوكس</p>
+
+<!-- إحصائيات -->
+<div class="stats-row" id="statsRow">
+  <div class="stat-box"><div class="stat-n" id="statTotal">0</div><div class="stat-l">إجمالي الأفلام</div></div>
+  <div class="stat-box"><div class="stat-n" id="statAdded">0</div><div class="stat-l">تمت إضافته</div></div>
+  <div class="stat-box"><div class="stat-n" id="statSkipped">0</div><div class="stat-l">موجود مسبقاً</div></div>
+  <div class="stat-box"><div class="stat-n" id="statFailed">0</div><div class="stat-l">فشل</div></div>
+  <div class="stat-box"><div class="stat-n" id="statPage">0</div><div class="stat-l">الصفحة الحالية</div></div>
+  <div class="stat-box"><div class="stat-n" id="statPages">?</div><div class="stat-l">إجمالي الصفحات</div></div>
+</div>
+
+<!-- تحذير -->
+<div class="alert">
+  ⚠️ تأكد من أن هذه الصفحة مفتوحة ولا تُغلق المتصفح أثناء الاستيراد. الاستيراد قد يستغرق عدة دقائق حسب عدد الأفلام.
+</div>
+
+<!-- الإعدادات -->
+<div class="card">
+  <h2>⚙️ إعدادات الاستيراد</h2>
+  <div class="settings-grid">
+    <div class="fg">
+      <label>من سنة</label>
+      <input class="fi" type="number" id="yearFrom" value="1930" min="1900" max="2025"/>
+    </div>
+    <div class="fg">
+      <label>إلى سنة</label>
+      <input class="fi" type="number" id="yearTo" value="2025" min="1900" max="2025"/>
+    </div>
+    <div class="fg">
+      <label>مصدر البث</label>
+      <select class="fi" id="srcSel">
+        <option value="0">🎬 VidSrc (موصى به)</option>
+        <option value="1">🎥 VidSrc.me</option>
+        <option value="2">📺 Embed.su</option>
+        <option value="3">🍿 2Embed</option>
+        <option value="4">🎞 MoviesAPI</option>
+        <option value="5">▶ MultiEmbed</option>
+        <option value="6">🚀 SmashyStream</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>ترتيب حسب</label>
+      <select class="fi" id="sortBy">
+        <option value="popularity.desc">الأكثر شهرة</option>
+        <option value="release_date.desc">الأحدث أولاً</option>
+        <option value="release_date.asc">الأقدم أولاً</option>
+        <option value="vote_average.desc">الأعلى تقييماً</option>
+        <option value="vote_count.desc">الأكثر تصويتاً</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>عدد الصفحات (20 فيلم/صفحة)</label>
+      <input class="fi" type="number" id="maxPages" value="100" min="1" max="500"/>
+    </div>
+    <div class="fg">
+      <label>تأخير بين الطلبات (ms)</label>
+      <input class="fi" type="number" id="delay" value="300" min="100" max="2000"/>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-start" id="btnStart" onclick="startImport()">▶ بدء الاستيراد</button>
+    <button class="btn btn-pause" id="btnPause" onclick="togglePause()" disabled>⏸ إيقاف مؤقت</button>
+    <button class="btn btn-stop"  id="btnStop"  onclick="stopImport()"  disabled>⏹ إيقاف</button>
+  </div>
+</div>
+
+<!-- شريط التقدم -->
+<div class="card">
+  <h2>📊 التقدم</h2>
+  <div id="statusMsg" style="font-size:13px;color:var(--muted);margin-bottom:8px;">في انتظار البدء...</div>
+  <div class="prog-wrap"><div class="prog-fill" id="progFill"></div></div>
+  <div class="prog-label" id="progLabel">0%</div>
+
+  <!-- سجل النشاط -->
+  <div style="margin-top:14px;">
+    <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;">📋 سجل النشاط:</div>
+    <div class="log-box" id="logBox"></div>
+  </div>
+</div>
+
+<!-- الأفلام المضافة حديثاً -->
+<div class="card">
+  <h2>🎬 آخر الأفلام المضافة</h2>
+  <div class="rec-grid" id="recGrid">
+    <div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted);">لم يبدأ الاستيراد بعد</div>
+  </div>
+</div>
+
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+/* ═══════════════════════════════════════
+   إعدادات Firebase و TMDB
+═══════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAJ5IzToU-f1RjzyyDzgwZ36_mSV-zmfsw",
+  authDomain: "fast-box-4ce89.firebaseapp.com",
+  projectId: "fast-box-4ce89",
+  storageBucket: "fast-box-4ce89.firebasestorage.app",
+  messagingSenderId: "937777103887",
+  appId: "1:937777103887:web:8990d7dc11f580f8b28f7a"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const TMDB_KEY  = "7487cb666a82c2e15c8ddec14b22fb47";
+const TMDB_BASE = "https://api.themoviedb.org/3";
+const TMDB_IMG  = "https://image.tmdb.org/t/p/w500";
+
+const EMBED_PROVIDERS = [
+  { label:'VidSrc',       movie: id => `https://vidsrc.to/embed/movie/${id}`,           tv:(id,s,e)=>`https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
+  { label:'VidSrc.me',    movie: id => `https://vidsrc.me/embed/movie?tmdb=${id}`,       tv:(id,s,e)=>`https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` },
+  { label:'Embed.su',     movie: id => `https://embed.su/embed/movie/${id}`,             tv:(id,s,e)=>`https://embed.su/embed/tv/${id}/${s}/${e}` },
+  { label:'2Embed',       movie: id => `https://www.2embed.cc/embed/${id}`,              tv:(id,s,e)=>`https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` },
+  { label:'MoviesAPI',    movie: id => `https://moviesapi.club/movie/${id}`,             tv:(id,s,e)=>`https://moviesapi.club/tv/${id}-${s}-${e}` },
+  { label:'MultiEmbed',   movie: id => `https://multiembed.mov/?video_id=${id}&tmdb=1`, tv:(id,s,e)=>`https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}` },
+  { label:'SmashyStream', movie: id => `https://player.smashy.stream/movie/${id}`,      tv:(id,s,e)=>`https://player.smashy.stream/tv/${id}?s=${s}&e=${e}` }
+];
+
+const GENRE_MAP = {
+  28:'أكشن',12:'مغامرات',16:'رسوم متحركة',35:'كوميدي',
+  80:'جريمة',99:'وثائقي',18:'دراما',10751:'عائلي',
+  14:'فانتازيا',36:'تاريخي',27:'رعب',9648:'غموض',
+  10749:'رومانسي',878:'خيال علمي',53:'إثارة',
+  10752:'حرب',10765:'خيال علمي وفانتازيا'
+};
+
+/* ═══════════════════════════════════════
+   متغيرات الحالة
+═══════════════════════════════════════ */
+let _running  = false;
+let _paused   = false;
+let _stop     = false;
+
+let _statTotal   = 0;
+let _statAdded   = 0;
+let _statSkipped = 0;
+let _statFailed  = 0;
+let _statPage    = 0;
+let _statPages   = 0;
+
+let _existingIds    = new Set();
+let _existingTitles = new Set();
+let _recentMovies   = [];
+
+/* ═══════════════════════════════════════
+   UI Helpers
+═══════════════════════════════════════ */
+function log(msg, type='info'){
+  const box = document.getElementById('logBox');
+  const line = document.createElement('div');
+  line.className = 'log-'+type;
+  const time = new Date().toLocaleTimeString('ar');
+  line.textContent = `[${time}] ${msg}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+function setStatus(msg){ document.getElementById('statusMsg').textContent = msg; }
+
+function setProgress(cur, total){
+  const pct = total > 0 ? Math.round(cur/total*100) : 0;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = `${pct}%  —  صفحة ${cur} من ${total}`;
+}
+
+function updateStats(){
+  document.getElementById('statTotal').textContent   = _statTotal;
+  document.getElementById('statAdded').textContent   = _statAdded;
+  document.getElementById('statSkipped').textContent = _statSkipped;
+  document.getElementById('statFailed').textContent  = _statFailed;
+  document.getElementById('statPage').textContent    = _statPage;
+  document.getElementById('statPages').textContent   = _statPages || '?';
+}
+
+function addToRecentGrid(movie){
+  _recentMovies.unshift(movie);
+  if(_recentMovies.length > 60) _recentMovies.pop();
+  const grid = document.getElementById('recGrid');
+  grid.innerHTML = _recentMovies.map(m=>`
+    <div class="rec-item">
+      <img src="${m.image||'https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=200'}"
+           onerror="this.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=200'" alt="${m.title}"/>
+      <p title="${m.title}">${m.title}</p>
+    </div>
+  `).join('');
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+/* ═══════════════════════════════════════
+   جلب الأفلام الموجودة في قاعدة البيانات
+═══════════════════════════════════════ */
+async function loadExisting(){
+  log('⏳ جارٍ تحميل الأفلام الموجودة في قاعدة البيانات...', 'info');
+  try{
+    const snap = await db.collection('movies').get();
+    _existingIds    = new Set();
+    _existingTitles = new Set();
+    snap.forEach(doc=>{
+      const d = doc.data();
+      if(d.tmdbId)  _existingIds.add(String(d.tmdbId));
+      if(d.title)   _existingTitles.add((d.title||'').toLowerCase().trim());
+    });
+    log(`✅ وُجد ${_existingIds.size} فيلم/مسلسل مسبقاً في القاعدة`, 'ok');
+  } catch(e){
+    log('⚠️ تعذّر تحميل القاعدة: ' + e.message, 'warn');
+  }
+}
+
+/* ═══════════════════════════════════════
+   جلب صفحة أفلام من TMDB
+═══════════════════════════════════════ */
+async function fetchTMDBPage(page, yearFrom, yearTo, sortBy){
+  const params = new URLSearchParams({
+    api_key: TMDB_KEY,
+    with_original_language: 'ar',
+    sort_by: sortBy,
+    page: page,
+    'primary_release_date.gte': yearFrom + '-01-01',
+    'primary_release_date.lte': yearTo   + '-12-31',
+    include_adult: 'false',
+    language: 'ar'
+  });
+  const res = await fetch(`${TMDB_BASE}/discover/movie?${params}`);
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
+/* ═══════════════════════════════════════
+   معالجة فيلم واحد
+═══════════════════════════════════════ */
+async function processMovie(m, srcIdx){
+  const tmdbId = String(m.id);
+
+  // فحص التكرار
+  if(_existingIds.has(tmdbId)){
+    _statSkipped++;
+    return false;
+  }
+  const titleLow = (m.title||m.name||'').toLowerCase().trim();
+  if(titleLow && _existingTitles.has(titleLow)){
+    _statSkipped++;
+    return false;
+  }
+
+  // بيانات الفيلم
+  const title  = m.title || m.name || 'غير معروف';
+  const year   = (m.release_date||'').split('-')[0] || '';
+  const desc   = m.overview || '';
+  const rating = parseFloat(m.vote_average || 0).toFixed(1);
+  const image  = m.poster_path ? TMDB_IMG + m.poster_path : '';
+  const genre  = GENRE_MAP[(m.genre_ids||[])[0]] || 'دراما';
+  const video  = EMBED_PROVIDERS[srcIdx].movie(m.id);
+  const itemId = Date.now() + Math.floor(Math.random()*10000);
+
+  const item = {
+    id:         itemId,
+    tmdbId:     m.id,
+    type:       'movie',
+    lang:       'arabic',
+    title,
+    year,
+    desc,
+    rating:     parseFloat(rating),
+    genre,
+    image,
+    video,
+    isLocalVideo: false,
+    seasons:    1,
+    episodes:   1,
+    extraSrcs:  {},
+    episodeLinks: []
+  };
+
+  try{
+    await db.collection('movies').doc(String(itemId)).set(item);
+    _existingIds.add(tmdbId);
+    _existingTitles.add(titleLow);
+    _statAdded++;
+    addToRecentGrid(item);
+    return true;
+  }catch(e){
+    _statFailed++;
+    log(`❌ فشل حفظ "${title}": ${e.message}`, 'err');
+    return false;
+  }
+}
+
+/* ═══════════════════════════════════════
+   بدء الاستيراد الرئيسي
+═══════════════════════════════════════ */
+async function startImport(){
+  if(_running) return;
+
+  const yearFrom = parseInt(document.getElementById('yearFrom').value) || 1930;
+  const yearTo   = parseInt(document.getElementById('yearTo').value)   || 2025;
+  const maxPages = Math.min(parseInt(document.getElementById('maxPages').value)||100, 500);
+  const delay    = parseInt(document.getElementById('delay').value)    || 300;
+  const srcIdx   = parseInt(document.getElementById('srcSel').value)   || 0;
+  const sortBy   = document.getElementById('sortBy').value || 'popularity.desc';
+
+  _running = true; _paused = false; _stop = false;
+  _statTotal=0; _statAdded=0; _statSkipped=0; _statFailed=0; _statPage=0;
+
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('btnPause').disabled = false;
+  document.getElementById('btnStop').disabled  = false;
+
+  log(`🚀 بدء الاستيراد — من ${yearFrom} إلى ${yearTo} — مصدر: ${EMBED_PROVIDERS[srcIdx].label}`, 'info');
+  log(`⚙️ الترتيب: ${sortBy} — أقصى عدد صفحات: ${maxPages}`, 'info');
+
+  // تحميل الأفلام الموجودة
+  await loadExisting();
+
+  // جلب الصفحة الأولى لمعرفة عدد الصفحات الكلي
+  let firstData;
+  try{
+    setStatus('⏳ جارٍ جلب معلومات المكتبة من TMDB...');
+    firstData = await fetchTMDBPage(1, yearFrom, yearTo, sortBy);
+    _statPages = Math.min(firstData.total_pages || 1, maxPages);
+    _statTotal = Math.min(firstData.total_results || 0, _statPages * 20);
+    updateStats();
+    log(`📊 وُجد ${firstData.total_results?.toLocaleString()} فيلم عبر ${firstData.total_pages} صفحة — سيتم استيراد ${_statPages} صفحة`, 'ok');
+  }catch(e){
+    log('❌ فشل الاتصال بـ TMDB: ' + e.message, 'err');
+    _running = false;
+    resetBtns();
+    return;
+  }
+
+  /* ── حلقة الصفحات ── */
+  for(let page = 1; page <= _statPages; page++){
+    if(_stop) break;
+
+    // إيقاف مؤقت
+    while(_paused && !_stop){
+      setStatus('⏸ إيقاف مؤقت — اضغط "متابعة" للاستمرار');
+      await sleep(500);
+    }
+    if(_stop) break;
+
+    _statPage = page;
+    setStatus(`📥 جارٍ معالجة الصفحة ${page} من ${_statPages}...`);
+    setProgress(page, _statPages);
+    updateStats();
+
+    try{
+      let data;
+      if(page === 1){
+        data = firstData;
+      } else {
+        data = await fetchTMDBPage(page, yearFrom, yearTo, sortBy);
+        await sleep(delay);
+      }
+
+      const movies = data.results || [];
+      let pageAdded = 0;
+
+      for(const m of movies){
+        if(_stop) break;
+        const added = await processMovie(m, srcIdx);
+        if(added) pageAdded++;
+        updateStats();
+      }
+
+      log(`📄 صفحة ${page}: أُضيف ${pageAdded} فيلم جديد — المجموع: ${_statAdded}`, pageAdded>0?'ok':'warn');
+
+    }catch(e){
+      log(`⚠️ خطأ في صفحة ${page}: ${e.message}`, 'warn');
+      await sleep(1000);
+    }
+  }
+
+  /* ── إنهاء ── */
+  _running = false;
+  resetBtns();
+  setProgress(_statPages, _statPages);
+
+  if(_stop){
+    setStatus(`⏹ تم الإيقاف — أُضيف ${_statAdded} فيلم`);
+    log(`⏹ توقف المستخدم — أُضيف ${_statAdded} فيلم عربي`, 'warn');
+  } else {
+    setStatus(`🎉 اكتمل الاستيراد! أُضيف ${_statAdded} فيلم عربي جديد`);
+    log(`🎉 ═══════════════════════════════════════`, 'ok');
+    log(`✅ اكتمل الاستيراد! النتائج النهائية:`, 'ok');
+    log(`   • أُضيف:       ${_statAdded} فيلم جديد`, 'ok');
+    log(`   • موجود مسبقاً: ${_statSkipped} فيلم`, 'ok');
+    log(`   • فشل:          ${_statFailed} فيلم`, _statFailed>0?'err':'ok');
+    log(`🎬 المكتبة العربية جاهزة في فاست بوكس!`, 'ok');
+    log(`═══════════════════════════════════════`, 'ok');
+  }
+}
+
+function togglePause(){
+  _paused = !_paused;
+  document.getElementById('btnPause').textContent = _paused ? '▶ متابعة' : '⏸ إيقاف مؤقت';
+  if(!_paused) log('▶ استُئنف الاستيراد', 'info');
+  else log('⏸ إيقاف مؤقت...', 'warn');
+}
+
+function stopImport(){
+  _stop = true;
+  _paused = false;
+  log('⏹ طلب الإيقاف...', 'warn');
+}
+
+function resetBtns(){
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnPause').disabled = true;
+  document.getElementById('btnStop').disabled  = true;
+  document.getElementById('btnPause').textContent = '⏸ إيقاف مؤقت';
+}
+
+/* ── تحذير قبل الإغلاق ── */
+window.addEventListener('beforeunload', e => {
+  if(_running){ e.preventDefault(); e.returnValue = ''; }
+});
+
+log('✅ الأداة جاهزة — اضغط "بدء الاستيراد" للبدء', 'ok');
+log('📌 يمكنك الاستيراد عدة مرات مع إعدادات مختلفة وستتخطى الأفلام الموجودة', 'info');
+</script>
+</body>
+</html>
